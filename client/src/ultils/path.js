@@ -2,12 +2,14 @@ const path = {
     PUBLIC: '/',
     TRANGCHU: '',
     ALL: '*',
-    TAIKHOAN: 'taikhoan',
-    MENU: 'menu',
+    LOGIN: 'login',
+    SANPHAM: 'sanpham',
+    CHITIETSANPHAM__PID__TITLE: 'san-pham/:pid/:title',
+    CHITIETSANPHAM: 'san-pham',
     BAIVIET: 'baiviet',
-    FAQS: 'faqs',
+    FAQ: 'faqs',
     LIENHETOI: 'lienhetoi',
-
+    FINAL_REGISTER: 'finalregister/:status',
 }
 
 export default path

@@ -4,25 +4,62 @@ const {generateAccessToken, generateRefreshToken} = require('..//middlewares//jw
 const jwt = require('jsonwebtoken')
 const sendMail = require('../ultils/sendMail')
 const crypto = require('crypto')
-
+const makeToken = require('uniqid')
 //-----------đăng kí người dùng-----------//
-const register = asyncHandler(async(req,res) =>{
-    const {email, password, firstname, lastname} = req.body
-    if(!email || !password || !firstname || !lastname) 
-        return res.status(400).json({
-            sucess: false,
-            mes: 'Missing input'
-        })
+// const register = asyncHandler(async(req,res) =>{
+//     const {email, password, firstname, lastname} = req.body
+//     if(!email || !password || !firstname || !lastname) 
+//         return res.status(400).json({
+//             success: false,
+//             mes: 'Missing input'
+//         })
+//     const user = await User.findOne({ email: email})
+//     if (user)  throw new Error('Người dùng đã tồn tại!')
+    
+//     else {
+//         const newUser = await User.create(req.body)
+//         return res.status(200).json({
+//             success: newUser ? true : false,
+//             mes: newUser ? 'Đăng ký thành công. Tiếp tục' : 'đã xảy ra sự cố'
+//         })
+//     }
+// })
+const register = asyncHandler(async(req, res) => {
+    const { email, password, firstname, lastname, mobile} = req.body
+    if(!email || !password || !firstname || !lastname || !mobile)
+    return res.status(400).json({
+        success: false,
+        mes: 'Điền vào chỗ trống'
+    })
     const user = await User.findOne({ email: email})
-    if (user)  throw new Error('User has existed!')
-       
+    if (user)  throw new Error('Người dùng đã tồn tại!')
+    
     else {
-        const newUser = await User.create(req.body)
-        return res.status(200).json({
-            success: newUser ? true : false,
-            mes: newUser ? 'Dang ky thanh cong. Go login' : 'đã xảy ra sự cố'
+        const token = makeToken() 
+        res.cookie('dataRegister', {...req.body, token}, {httpOnly: true, maxAge:  15 * 60 * 1000})
+        const html = `Xin vui lòng click vào link dưới đây để hoàn tất quá trình đăng ký. Link này sẽ hết hạn sau 15 phút kể từ bây giờ. 
+        <a href=${process.env.URL_SERVER}/api/user/finalregister/${token}>Click here</a>`
+        await sendMail({email, html, subject: 'Hoàn tất đăng ký'})
+        return res.json({
+            success: true,
+            mes: 'Hãy kiểm tra mail của bạn '
         })
     }
+   
+})
+const finalRegister = asyncHandler(async(req, res) => {
+    const cookie = req.cookies
+    const { token } = req.params
+    if (!cookie ||cookie?.dataregister?.token !== token ) return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+    const newUser = await User.create({
+        email: cookie?.dataregister?.email,
+        password: cookie?.dataregister?.password,
+        mobile: cookie?.dataregister?.mobile,
+        firstname: cookie?.dataregister?.firstname,
+        lastname: cookie?.dataregister?.lastname,
+    })
+    if (newUser) return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`)
+    else return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
 })
 //-----------Login----------//
 // Refresh token => cấp mới access token
@@ -31,7 +68,7 @@ const login = asyncHandler(async(req,res) =>{
     const {email, password} = req.body
     if(!email || !password) 
         return res.status(400).json({
-            sucess: false,
+            success: false,
             mes: 'Missing input'
         })
 
@@ -49,7 +86,7 @@ const login = asyncHandler(async(req,res) =>{
         res.cookie('refreshToken', newrefreshToken, {httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000})
 
         return res.status(200).json({
-            sucess: true,
+            success: true,
             accessToken,
             userData
         })
@@ -116,7 +153,8 @@ const forgotPassword  = asyncHandler(async(req, res) => {
     const html = `Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.URL_SERVER}/api/user/reset-password/${resetToken}>Click here</a>`
     const data = {
         email,
-        html
+        html,
+        subject: 'quên mật khẩu'
     }
     const rs = await sendMail(data)
     return res.status(200).json({
@@ -228,5 +266,5 @@ module.exports ={
     updateUserByAdmin,
     updateUserAddress,
     updateCart,
-
+    finalRegister,
 }

@@ -20,8 +20,8 @@ var userSchema = new mongoose.Schema({
     },
     mobile:{
         type:String,
-        required:true,
         unique:true,
+        required:true
     },
     password:{
         type:String,
@@ -54,6 +54,9 @@ var userSchema = new mongoose.Schema({
         type: String
     },
     passwordResetToken: { //gui qua mail token cho nguoi dung doi mat khau
+        type: String
+    },
+    registerToken: {
         type: String
     },
     passwordResetExpires: { //thoi gian hieu luc token

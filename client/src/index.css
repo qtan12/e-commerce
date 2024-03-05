@@ -14,9 +14,9 @@ button.slick-prev {
 }
 
 button.slick-next::before {
-    color: gray;
+    color: #70BA76;
     content: '\276F';
-    background-color: rgb(112, 186, 118);
+    background-color: #fff;
     font-size: 30px;
     display: flex;
     width: 80px;
@@ -27,9 +27,9 @@ button.slick-next::before {
     
 }
 button.slick-prev::before {
-    color: gray;
+    color: #70BA76;
     content: '\276E';
-    background-color: rgb(112, 186, 118);
+    background-color: #fff;
     font-size: 30px;
     display: flex;
     width: 80px;

@@ -6,6 +6,7 @@ import { FaUser } from "react-icons/fa";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { FaEye, FaHeart  } from "react-icons/fa";
 import { FiMenu } from "react-icons/fi";
+import { IoIosArrowForward } from "react-icons/io";
 
 const icons={
     GoHomeFill,
@@ -18,6 +19,7 @@ const icons={
     FaEye,
     FiMenu,
     FaHeart,
+    IoIosArrowForward
 }
 
 export default icons

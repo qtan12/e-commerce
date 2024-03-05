@@ -8,8 +8,8 @@ export const navigation = [
     },
     {
         id: 2,
-        value: 'MENU',
-        path: `/${path.MENU}`
+        value: 'SAN PHAM',
+        path: `/${path.SANPHAM}`
     },
     {
         id: 3,
@@ -19,7 +19,7 @@ export const navigation = [
     {
         id: 4,
         value: 'CAU HOI THUONG GAP',
-        path: `/${path.FAQS}`
+        path: `/${path.FAQ}`
     },
     {
         id: 5,
