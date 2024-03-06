@@ -13,7 +13,6 @@ const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const location = useLocation()
-  console.log(location)
   const [payload, setPayload] = useState({
     firstname:'',
     lastname:'',
@@ -32,7 +31,7 @@ const Login = () => {
     })
   }
   const handleSubmit = useCallback(async() =>{
-    const {firstname, lastname, phone, ...data} = payload
+    const {firstname, lastname, mobile, ...data} = payload
     // Đăng ký
     if (isRegister) {
       const response = await apiRegister(payload) 

@@ -25,18 +25,18 @@ const makeToken = require('uniqid')
 //     }
 // })
 const register = asyncHandler(async(req, res) => {
-    const { email, password, firstname, lastname, mobile} = req.body
-    if(!email || !password || !firstname || !lastname || !mobile)
+    const { firstname, lastname, mobile, email, password } = req.body
+    if( !firstname || !lastname || !mobile || !email || !password )
     return res.status(400).json({
         success: false,
         mes: 'Điền vào chỗ trống'
     })
-    const user = await User.findOne({ email: email})
+    const user = await User.findOne({ email})
     if (user)  throw new Error('Người dùng đã tồn tại!')
     
     else {
         const token = makeToken() 
-        res.cookie('dataRegister', {...req.body, token}, {httpOnly: true, maxAge:  15 * 60 * 1000})
+        res.cookie('dataregister', { ...req.body, token}, {httpOnly: true, maxAge:  15 * 60 * 1000})
         const html = `Xin vui lòng click vào link dưới đây để hoàn tất quá trình đăng ký. Link này sẽ hết hạn sau 15 phút kể từ bây giờ. 
         <a href=${process.env.URL_SERVER}/api/user/finalregister/${token}>Click here</a>`
         await sendMail({email, html, subject: 'Hoàn tất đăng ký'})
@@ -50,6 +50,8 @@ const register = asyncHandler(async(req, res) => {
 const finalRegister = asyncHandler(async(req, res) => {
     const cookie = req.cookies
     const { token } = req.params
+    console.log(token)
+    console.log(cookie)
     if (!cookie ||cookie?.dataregister?.token !== token ) return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
     const newUser = await User.create({
         email: cookie?.dataregister?.email,

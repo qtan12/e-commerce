@@ -22,11 +22,11 @@ function App() {
           <Route path={path.BAIVIET} element={<Baiviet />} />
           <Route path={path.FAQ} element={<FAQ />} />
           <Route path={path.LIENHETOI} lement={<Lienhetoi />} />
-          <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />
 
           <Route path={path.SANPHAM} element={<Sanpham />} />
 
         </Route>
+        <Route path={path.FINAL_REGISTER} element={<FinalRegister />} />
         <Route path={path.LOGIN} element={<Login />} />
 
       </Routes>
